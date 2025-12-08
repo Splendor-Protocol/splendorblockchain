@@ -1,6 +1,6 @@
-# Splendor Blockchain V4 Documentation Hub
+# Splendor Blockchain Documentation Hub
 
-Welcome to the comprehensive documentation for Splendor Blockchain V4. This documentation covers everything you need to know about using, developing on, and contributing to the Splendor ecosystem.
+Welcome to the comprehensive documentation for Splendor Blockchain. This documentation covers everything you need to know about using, developing on, and contributing to the Splendor ecosystem.
 
 ## 📁 Documentation Structure
 

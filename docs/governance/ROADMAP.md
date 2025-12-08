@@ -1,6 +1,6 @@
-# Splendor Blockchain V4 Roadmap
+# Splendor Blockchain Roadmap
 
-This roadmap outlines the development plans and milestones for Splendor Blockchain V4. Our vision is to create the most developer-friendly, high-performance blockchain platform for the decentralized future.
+This roadmap outlines the development plans and milestones for Splendor Blockchain. Our vision is to create the most developer-friendly, high-performance blockchain platform for the decentralized future.
 
 ## 🎯 Vision & Mission
 
@@ -11,7 +11,7 @@ This roadmap outlines the development plans and milestones for Splendor Blockcha
 ## 📅 Development Timeline
 
 ### Q1 2025 ✅ COMPLETED
-- ✅ **Mainnet Launch** - Successfully launched Splendor Blockchain V4 mainnet
+- ✅ **Mainnet Launch** - Successfully launched Splendor Blockchain mainnet
 - ✅ **Core Infrastructure Deployment** - Deployed all essential system contracts
 - ✅ **Initial Validator Set** - Established founding validator network
 - ✅ **Basic DApp Ecosystem** - First wave of DApps deployed

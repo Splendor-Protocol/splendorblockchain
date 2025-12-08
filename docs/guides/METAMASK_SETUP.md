@@ -1,6 +1,6 @@
 # MetaMask Setup for Splendor Mainnet
 
-This guide will help you connect MetaMask to the Splendor Blockchain V4 mainnet for real transactions and DApp interactions.
+This guide will help you connect MetaMask to the Splendor Blockchain mainnet for real transactions and DApp interactions.
 
 ## Prerequisites
 

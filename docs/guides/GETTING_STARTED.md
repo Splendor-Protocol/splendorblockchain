@@ -1,6 +1,6 @@
-# Getting Started with Splendor Blockchain V4
+# Getting Started with Splendor Blockchain
 
-This guide will help you get up and running with the Splendor Blockchain V4 mainnet quickly.
+This guide will help you get up and running with the Splendor Blockchain mainnet quickly.
 
 ## Prerequisites
 
