@@ -1,7 +1,7 @@
 {
   "name": "splendorblockchain",
   "version": "4.0.0",
-  "description": "Splendor Blockchain V4 - A high-performance blockchain with Congress consensus mechanism",
+  "description": "Splendor Blockchain - A high-performance blockchain with Congress consensus mechanism",
   "main": "mainnet-verification.js",
   "scripts": {
     "start": "node mainnet-verification.js",

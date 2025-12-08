@@ -2,7 +2,7 @@
 
 ## Supported Versions
 
-We actively support the following versions of Splendor Blockchain V4:
+We actively support the following versions of Splendor Blockchain:
 
 | Version | Supported          |
 | ------- | ------------------ |
@@ -102,7 +102,7 @@ We prefer all communications to be in English.
 
 ## Security Audits
 
-Splendor Blockchain V4 has undergone security audits by reputable firms:
+Splendor Blockchain has undergone security audits by reputable firms:
 
 - **Core Protocol Audit**: [Audit Report Link]
 - **System Contracts Audit**: [Audit Report Link]

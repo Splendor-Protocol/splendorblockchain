@@ -1,4 +1,4 @@
-# Contributing to Splendor Blockchain V4
+# Contributing to Splendor Blockchain
 
 Thank you for your interest in contributing to Splendor Blockchain! We welcome contributions from the community and are pleased to have you join us.
 
@@ -371,7 +371,7 @@ Contributors will be:
 
 ## License
 
-By contributing to Splendor Blockchain V4, you agree that your contributions will be licensed under the [MIT License](LICENSE).
+By contributing to Splendor Blockchain, you agree that your contributions will be licensed under the [MIT License](LICENSE).
 
 ---
 

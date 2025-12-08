@@ -1,6 +1,6 @@
 # Splendor Blockchain Troubleshooting Guide
 
-This comprehensive troubleshooting guide will help you resolve common issues when working with Splendor Blockchain V4.
+This comprehensive troubleshooting guide will help you resolve common issues when working with Splendor Blockchain.
 
 ## Quick Diagnostic Checklist
 

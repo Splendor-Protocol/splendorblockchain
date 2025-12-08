@@ -2,7 +2,7 @@
   <img src="logo.png" alt="Splendor Blockchain Logo" width="200"/>
 </div>
 
-# Splendor Blockchain V4 - Mainnet
+# Splendor Blockchain - Mainnet
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Go Version](https://img.shields.io/badge/Go-1.15+-blue.svg)](https://golang.org)
@@ -13,7 +13,7 @@ A high-performance, enterprise-grade blockchain with Congress consensus mechanis
 
 ## 🌟 Overview
 
-Splendor Blockchain V4 is an advanced blockchain platform combining AI-powered optimization with GPU acceleration, achieving verified 2.35M TPS performance. With full Ethereum compatibility and innovative consensus mechanisms, Splendor is preparing for production mainnet launch in Q1 2026. The platform offers sub-second block times, minimal transaction fees, and enterprise-grade security with quantum-resistant cryptography.
+Splendor Blockchain is an advanced blockchain platform combining AI-powered optimization with GPU acceleration, achieving verified 2.35M TPS performance. With full Ethereum compatibility and innovative consensus mechanisms, Splendor is preparing for production mainnet launch in Q1 2026. The platform offers sub-second block times, minimal transaction fees, and enterprise-grade security with quantum-resistant cryptography.
 
 ### Key Features
 
@@ -437,7 +437,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## ⚠️ Disclaimer
 
-Splendor Blockchain V4 is production software, but blockchain technology involves inherent risks. Users should:
+Splendor Blockchain is production software, but blockchain technology involves inherent risks. Users should:
 - Understand the technology before using
 - Never invest more than they can afford to lose
 - Keep private keys secure and backed up

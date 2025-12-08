@@ -1,6 +1,6 @@
 # Security Documentation
 
-This directory contains comprehensive security documentation, audit reports, and vulnerability analyses for Splendor Blockchain V4.
+This directory contains comprehensive security documentation, audit reports, and vulnerability analyses for Splendor Blockchain.
 
 ## 📋 Contents
 

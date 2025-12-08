@@ -1,6 +1,6 @@
 # Changelog & Version History
 
-This directory contains version history and change documentation for Splendor Blockchain V4.
+This directory contains version history and change documentation for Splendor Blockchain.
 
 ## 📋 Contents
 

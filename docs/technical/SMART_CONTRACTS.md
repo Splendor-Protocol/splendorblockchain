@@ -1,10 +1,10 @@
 # Smart Contract Development on Splendor Blockchain
 
-This guide covers smart contract development, deployment, and interaction on the Splendor Blockchain V4 mainnet.
+This guide covers smart contract development, deployment, and interaction on the Splendor Blockchain mainnet.
 
 ## Overview
 
-Splendor Blockchain V4 is fully compatible with Ethereum, meaning you can use familiar tools and frameworks like Hardhat, Truffle, and Remix. All Ethereum smart contracts can be deployed on Splendor with minimal or no modifications.
+Splendor Blockchain is fully compatible with Ethereum, meaning you can use familiar tools and frameworks like Hardhat, Truffle, and Remix. All Ethereum smart contracts can be deployed on Splendor with minimal or no modifications.
 
 ## Development Environment Setup
 

@@ -1,10 +1,10 @@
 # Splendor Blockchain API Reference
 
-This document provides comprehensive information about the Splendor Blockchain V4 JSON-RPC API, system contracts, and development interfaces.
+This document provides comprehensive information about the Splendor Blockchain JSON-RPC API, system contracts, and development interfaces.
 
 ## Overview
 
-Splendor Blockchain V4 is fully compatible with Ethereum's JSON-RPC API, making it easy to integrate with existing tools and libraries. The mainnet RPC endpoint is available at `https://mainnet-rpc.splendor.org/`.
+Splendor Blockchain is fully compatible with Ethereum's JSON-RPC API, making it easy to integrate with existing tools and libraries. The mainnet RPC endpoint is available at `https://mainnet-rpc.splendor.org/`.
 
 ## Network Information
 
@@ -564,4 +564,4 @@ For enterprise support and custom integrations, contact the Splendor team throug
 
 ---
 
-**Note**: This API reference is for Splendor Blockchain V4 mainnet. Always verify contract addresses and endpoints before using in production applications.
+**Note**: This API reference is for Splendor Blockchain mainnet. Always verify contract addresses and endpoints before using in production applications.
