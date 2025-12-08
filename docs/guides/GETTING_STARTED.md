@@ -17,8 +17,8 @@ Before you begin, ensure you have the following installed:
 
 ```bash
 # Clone the repository
-git clone https://github.com/Splendor-Protocol/splendor-blockchain-v4.git
-cd splendor-blockchain-v4
+git clone https://github.com/Splendor-Protocol/splendorblockchain.git
+cd splendorblockchain
 
 # Install root dependencies
 npm install

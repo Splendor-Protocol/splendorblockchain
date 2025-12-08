@@ -8,7 +8,7 @@ ORANGE='\033[0;33m'
 NC='\033[0m' # No Color
 CYAN='\033[0;36m'
 YELLOW='\033[1;33m'
-BASE_DIR="/root/splendor-blockchain-v4"
+BASE_DIR="/root/splendorblockchain"
 CORE_DIR="$BASE_DIR/Core-Blockchain"
 TMP_DIR="/root/tmp"
 
@@ -160,18 +160,18 @@ stop_nodes() {
   log_success "Nodes stopped successfully"
 }
 
-# Remove old splendor-blockchain-v4 directory
+# Remove old splendorblockchain directory
 remove_old_directory() {
-  log_step "Removing old splendor-blockchain-v4 directory"
+  log_step "Removing old splendorblockchain directory"
   
   cd /root/
   
-  if [ -d "splendor-blockchain-v4" ]; then
-    log_wait "Removing splendor-blockchain-v4 directory"
-    rm -rf splendor-blockchain-v4
+  if [ -d "splendorblockchain" ]; then
+    log_wait "Removing splendorblockchain directory"
+    rm -rf splendorblockchain
     log_success "Old directory removed"
   else
-    log_warning "splendor-blockchain-v4 directory not found"
+    log_warning "splendorblockchain directory not found"
   fi
 }
 
@@ -181,8 +181,8 @@ clone_repository() {
   
   cd /root/
   
-  log_wait "Cloning https://github.com/Splendor-Protocol/splendor-blockchain-v4.git"
-  if git clone https://github.com/Splendor-Protocol/splendor-blockchain-v4.git; then
+  log_wait "Cloning https://github.com/Splendor-Protocol/splendorblockchain.git"
+  if git clone https://github.com/Splendor-Protocol/splendorblockchain.git; then
     log_success "Repository cloned successfully"
   else
     log_error "Failed to clone repository"

@@ -1,5 +1,5 @@
 {
-  "name": "splendor-blockchain-v4",
+  "name": "splendorblockchain",
   "version": "4.0.0",
   "description": "Splendor Blockchain V4 - A high-performance blockchain with Congress consensus mechanism",
   "main": "mainnet-verification.js",
@@ -31,12 +31,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Splendor-Protocol/splendor-blockchain-v4.git"
+    "url": "https://github.com/Splendor-Protocol/splendorblockchain.git"
   },
   "bugs": {
-    "url": "https://github.com/Splendor-Protocol/splendor-blockchain-v4/issues"
+    "url": "https://github.com/Splendor-Protocol/splendorblockchain/issues"
   },
-  "homepage": "https://github.com/Splendor-Protocol/splendor-blockchain-v4#readme",
+  "homepage": "https://github.com/Splendor-Protocol/splendorblockchain#readme",
   "engines": {
     "node": ">=20.0.0",
     "npm": ">=10.0.0",

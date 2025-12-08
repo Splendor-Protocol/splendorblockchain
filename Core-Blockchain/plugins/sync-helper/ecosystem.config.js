@@ -2,7 +2,7 @@ module.exports = {
   apps: [{
     name: 'sync-helper',
     script: 'index.js',
-    cwd: '/root/splendor-blockchain-v4/Core-Blockchain/plugins/sync-helper',
+    cwd: '/root/splendorblockchain/Core-Blockchain/plugins/sync-helper',
     instances: 1,
     autorestart: true,
     watch: false,

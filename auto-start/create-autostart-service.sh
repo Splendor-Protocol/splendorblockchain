@@ -17,15 +17,15 @@ echo -e "${CYAN}================================================${NC}"
 
 # Find the splendor blockchain directory
 BLOCKCHAIN_DIR=""
-if [ -d "/root/splendor-blockchain-v4/Core-Blockchain" ]; then
-    BLOCKCHAIN_DIR="/root/splendor-blockchain-v4/Core-Blockchain"
-elif [ -d "~/splendor-blockchain-v4/Core-Blockchain" ]; then
-    BLOCKCHAIN_DIR="~/splendor-blockchain-v4/Core-Blockchain"
+if [ -d "/root/splendorblockchain/Core-Blockchain" ]; then
+    BLOCKCHAIN_DIR="/root/splendorblockchain/Core-Blockchain"
+elif [ -d "~/splendorblockchain/Core-Blockchain" ]; then
+    BLOCKCHAIN_DIR="~/splendorblockchain/Core-Blockchain"
 elif [ -d "./Core-Blockchain" ]; then
     BLOCKCHAIN_DIR="$(pwd)/Core-Blockchain"
 else
     echo -e "${RED}Error: Could not find Core-Blockchain directory${NC}"
-    echo -e "${ORANGE}Please run this script from the splendor-blockchain-v4 directory${NC}"
+    echo -e "${ORANGE}Please run this script from the splendorblockchain directory${NC}"
     exit 1
 fi
 

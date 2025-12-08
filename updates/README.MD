@@ -12,7 +12,7 @@ This script automates the process of updating your Splendor Blockchain v4 instal
 ```bash
 cd /root && \
 curl -fsSL -H 'Accept: application/vnd.github.raw' \
-  "https://api.github.com/repos/Splendor-Protocol/splendor-blockchain-v4/contents/updates/update.sh?ref=main" \
+  "https://api.github.com/repos/Splendor-Protocol/splendorblockchain/contents/updates/update.sh?ref=main" \
   -o update.sh && chmod +x update.sh && ./update.sh
 ```
 
@@ -58,7 +58,7 @@ After detaching, the node continues running in the background. You can safely:
 
 ## Requirements
 
-- Git repository at `/root/splendor-blockchain-v4`
+- Git repository at `/root/splendorblockchain`
 - tmux (for node management)
 - Internet connection for GitHub access
 

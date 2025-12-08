@@ -67,8 +67,8 @@ console.log('Connected to:', network.name, 'Chain ID:', network.chainId);
 
 ```bash
 # Clone and test
-git clone https://github.com/Splendor-Protocol/splendor-blockchain-v4.git
-cd splendor-blockchain-v4
+git clone https://github.com/Splendor-Protocol/splendorblockchain.git
+cd splendorblockchain
 npm install
 npm run verify
 ```

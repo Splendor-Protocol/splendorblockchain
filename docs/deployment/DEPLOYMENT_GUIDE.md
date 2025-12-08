@@ -82,8 +82,8 @@ Splendor RPC is a DPoS (Delegated Proof of Stake) blockchain with the following 
 
 1. **Clone Repository**:
    ```bash
-   https://github.com/Splendor-Protocol/splendor-blockchain-v4.git
-   cd splendor-blockchain-v4/Core-Blockchain
+   https://github.com/Splendor-Protocol/splendorblockchain.git
+   cd splendorblockchain/Core-Blockchain
    ```
 
 2. **Setup Validator Node**:

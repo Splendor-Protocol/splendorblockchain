@@ -92,7 +92,7 @@ journalctl -u splendor-validator -n 50  # Last 50 lines
 The auto-start script creates:
 
 1. **Systemd Service File**: `/etc/systemd/system/splendor-validator.service`
-2. **Startup Wrapper Script**: `~/splendor-blockchain-v4/Core-Blockchain/startup-wrapper.sh`
+2. **Startup Wrapper Script**: `~/splendorblockchain/Core-Blockchain/startup-wrapper.sh`
 3. **PM2 Startup Configuration**: Configures PM2 to survive reboots
 
 ### Service Features:
@@ -167,7 +167,7 @@ sudo rm /etc/systemd/system/splendor-validator.service
 systemctl daemon-reload
 
 # Remove startup wrapper (optional)
-rm ~/splendor-blockchain-v4/Core-Blockchain/startup-wrapper.sh
+rm ~/splendorblockchain/Core-Blockchain/startup-wrapper.sh
 ```
 
 That's it! Your validator will now start automatically after server reboots.

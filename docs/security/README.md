@@ -101,7 +101,7 @@ See [SECURITY_FIXES_APPLIED.md](SECURITY_FIXES_APPLIED.md) for the latest securi
 
 ### Community Security
 - **Telegram**: [Splendor Labs](https://t.me/SplendorLabs)
-- **GitHub**: [Security Advisories](https://github.com/Splendor-Protocol/splendor-blockchain-v4/security/advisories)
+- **GitHub**: [Security Advisories](https://github.com/Splendor-Protocol/splendorblockchain/security/advisories)
 
 ---
 

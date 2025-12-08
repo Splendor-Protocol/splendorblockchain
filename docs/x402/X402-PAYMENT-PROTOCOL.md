@@ -399,4 +399,4 @@ export X402_DEBUG=1           # Enable verbose logging
 
 **The X402 Payment Protocol brings HTTP 402 functionality to Splendor Blockchain, enabling true API monetization with cryptocurrency!**
 
-For questions or support, join our [Telegram](https://t.me/SplendorLabs) or open an issue on [GitHub](https://github.com/Splendor-Protocol/splendor-blockchain-v4).
+For questions or support, join our [Telegram](https://t.me/SplendorLabs) or open an issue on [GitHub](https://github.com/Splendor-Protocol/splendorblockchain).

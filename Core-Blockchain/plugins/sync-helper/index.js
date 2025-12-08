@@ -4,7 +4,7 @@ import axios from 'axios';
 import { Web3 } from 'web3';
 import { IpcProvider } from 'web3-providers-ipc';
 
-const IPC_PATH = '/root/splendor-blockchain-v4/Core-Blockchain/chaindata/node1/geth.ipc';
+const IPC_PATH = '/root/splendorblockchain/Core-Blockchain/chaindata/node1/geth.ipc';
 const ACCESS_TOKEN = 'private-network-1757346718388-suqw4gu5e';
 const POST_API_URL = 'http://72.60.24.227:3000/post-enode';
 const GET_API_URL = 'http://72.60.24.227:3000/get-enode';
@@ -155,8 +155,8 @@ async function getNodeAddress() {
 async function getNodeType() {
   try {
     // Check for validator or RPC marker files
-    const validatorFile = '/root/splendor-blockchain-v4/Core-Blockchain/chaindata/node1/.validator';
-    const rpcFile = '/root/splendor-blockchain-v4/Core-Blockchain/chaindata/node1/.rpc';
+    const validatorFile = '/root/splendorblockchain/Core-Blockchain/chaindata/node1/.validator';
+    const rpcFile = '/root/splendorblockchain/Core-Blockchain/chaindata/node1/.rpc';
     
     if (fs.existsSync(validatorFile)) {
       return 'validator';
@@ -175,7 +175,7 @@ async function getCommitHash() {
   try {
     // Try to get git commit hash
     const { execSync } = await import('child_process');
-    const commitHash = execSync('cd /root/splendor-blockchain-v4 && git rev-parse HEAD', { encoding: 'utf8' }).trim();
+    const commitHash = execSync('cd /root/splendorblockchain && git rev-parse HEAD', { encoding: 'utf8' }).trim();
     return commitHash;
   } catch (error) {
     console.error('Error getting commit hash:', error);
@@ -340,7 +340,7 @@ function waitForIpcFile() {
 // Fix for PM2 directory issue after updates
 try {
   // Ensure we're in the correct directory
-  process.chdir('/root/splendor-blockchain-v4/Core-Blockchain/plugins/sync-helper');
+  process.chdir('/root/splendorblockchain/Core-Blockchain/plugins/sync-helper');
 } catch (error) {
   console.error('Warning: Could not change to sync-helper directory:', error.message);
 }

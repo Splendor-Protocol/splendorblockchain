@@ -254,7 +254,7 @@ const receipt = await web3.eth.sendTransaction(gaslessTndApprove);
 
 1. **Build Blockchain:**
    ```bash
-   cd splendor-blockchain-v4/Core-Blockchain/node_src
+   cd splendorblockchain/Core-Blockchain/node_src
    make geth
    ```
 
@@ -428,7 +428,7 @@ Checks if a token address is whitelisted for gasless transactions.
 
 1. **Build Modified Blockchain:**
    ```bash
-   cd splendor-blockchain-v4/Core-Blockchain/node_src
+   cd splendorblockchain/Core-Blockchain/node_src
    make geth
    ```
 

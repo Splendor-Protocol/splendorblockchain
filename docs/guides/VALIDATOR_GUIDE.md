@@ -123,12 +123,12 @@ sudo -i
 
 ### 6. Clone the Splendor blockchain repository
 ```bash
-git clone https://github.com/Splendor-Protocol/splendor-blockchain-v4.git
+git clone https://github.com/Splendor-Protocol/splendorblockchain.git
 ```
 
 ### 7. Move into the Core-Blockchain directory
 ```bash
-cd splendor-blockchain-v4/Core-Blockchain
+cd splendorblockchain/Core-Blockchain
 ```
 
 ### 8. Run the validator setup

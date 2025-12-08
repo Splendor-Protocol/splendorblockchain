@@ -35,7 +35,7 @@ The **X402 Gasless Transaction** system enables zero gas fee transactions for th
 
 ### **1. Build the Blockchain**
 ```bash
-cd splendor-blockchain-v4/Core-Blockchain/node_src
+cd splendorblockchain/Core-Blockchain/node_src
 make geth
 ```
 
@@ -69,7 +69,7 @@ const gaslessTransaction = {
 ## 📁 Project Structure
 
 ```
-splendor-blockchain-v4/
+splendorblockchain/
 ├── Core-Blockchain/
 │   ├── node_src/
 │   │   ├── core/
@@ -178,7 +178,7 @@ After editing, rebuild with: `make geth`
 ### **Blockchain Logs:**
 ```bash
 # Monitor X402 transactions
-tail -f splendor-blockchain-v4/Core-Blockchain/chaindata/geth.log | grep "X402"
+tail -f splendorblockchain/Core-Blockchain/chaindata/geth.log | grep "X402"
 
 # Expected messages:
 INFO X402 gasless transaction detected from=0x...

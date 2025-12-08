@@ -23,8 +23,8 @@ This project and everyone participating in it is governed by our [Code of Conduc
 1. **Fork the repository** on GitHub
 2. **Clone your fork** locally:
    ```bash
-   git clone https://github.com/your-username/splendor-blockchain-v4.git
-   cd splendor-blockchain-v4
+   git clone https://github.com/your-username/splendorblockchain.git
+   cd splendorblockchain
    ```
 3. **Set up the development environment** (see [Development Setup](#development-setup))
 4. **Create a branch** for your feature or bug fix:

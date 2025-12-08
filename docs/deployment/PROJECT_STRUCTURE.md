@@ -8,7 +8,7 @@ This document outlines the clean, organized structure of the Splendor Blockchain
 ## 📁 Repository Structure
 
 ```
-splendor-blockchain-v4/
+splendorblockchain/
 ├── 📄 README.md                           # Main project overview and quick start
 ├── 📄 LICENSE                             # MIT License
 ├── 📄 package.json                        # Node.js dependencies and scripts

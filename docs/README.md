@@ -104,7 +104,7 @@ Track changes, updates, and version history.
 
 ### Official Links
 - **Website**: [https://splendor.org](https://splendor.org)
-- **GitHub**: [https://github.com/Splendor-Protocol/splendor-blockchain-v4](https://github.com/Splendor-Protocol/splendor-blockchain-v4)
+- **GitHub**: [https://github.com/Splendor-Protocol/splendorblockchain](https://github.com/Splendor-Protocol/splendorblockchain)
 - **Explorer**: [https://explorer.splendor.org](https://explorer.splendor.org)
 - **Mainnet RPC**: [https://mainnet-rpc.splendor.org/](https://mainnet-rpc.splendor.org/)
 
@@ -159,14 +159,14 @@ Track all changes, updates, and improvements to the Splendor blockchain.
 
 ### Documentation Issues
 If you find errors in the documentation or have suggestions for improvement:
-1. [Open an issue](https://github.com/Splendor-Protocol/splendor-blockchain-v4/issues/new?template=bug_report.md)
-2. [Submit a pull request](https://github.com/Splendor-Protocol/splendor-blockchain-v4/pulls)
+1. [Open an issue](https://github.com/Splendor-Protocol/splendorblockchain/issues/new?template=bug_report.md)
+2. [Submit a pull request](https://github.com/Splendor-Protocol/splendorblockchain/pulls)
 3. Join our [Telegram](https://t.me/SplendorLabs) for real-time help
 
 ### Technical Support
-- **General Questions**: [GitHub Discussions](https://github.com/Splendor-Protocol/splendor-blockchain-v4/discussions)
-- **Bug Reports**: [GitHub Issues](https://github.com/Splendor-Protocol/splendor-blockchain-v4/issues)
-- **Validator Support**: Use our [Validator Support Template](https://github.com/Splendor-Protocol/splendor-blockchain-v4/issues/new?template=validator_support.md)
+- **General Questions**: [GitHub Discussions](https://github.com/Splendor-Protocol/splendorblockchain/discussions)
+- **Bug Reports**: [GitHub Issues](https://github.com/Splendor-Protocol/splendorblockchain/issues)
+- **Validator Support**: Use our [Validator Support Template](https://github.com/Splendor-Protocol/splendorblockchain/issues/new?template=validator_support.md)
 - **Security Issues**: Email security@splendor.org
 
 ### Community Support
@@ -186,7 +186,7 @@ For small fixes like typos or clarifications:
 
 ### Major Changes
 For significant additions or restructuring:
-1. [Open an issue](https://github.com/Splendor-Protocol/splendor-blockchain-v4/issues) to discuss your proposal
+1. [Open an issue](https://github.com/Splendor-Protocol/splendorblockchain/issues) to discuss your proposal
 2. Fork the repository
 3. Create a feature branch
 4. Make your changes
@@ -249,7 +249,7 @@ To find specific information quickly:
 
 **Need immediate help?** Join our [Telegram](https://t.me/SplendorLabs) for real-time support from the community and core team.
 
-**Found a bug?** Report it using our [bug report template](https://github.com/Splendor-Protocol/splendor-blockchain-v4/issues/new?template=bug_report.md).
+**Found a bug?** Report it using our [bug report template](https://github.com/Splendor-Protocol/splendorblockchain/issues/new?template=bug_report.md).
 
 **Want to contribute?** Check out our [contributing guide](governance/CONTRIBUTING.md) to get started.
 

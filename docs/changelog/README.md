@@ -114,8 +114,8 @@ Example:
 
 ## 📞 Questions?
 
-- **General Questions**: [GitHub Discussions](https://github.com/Splendor-Protocol/splendor-blockchain-v4/discussions)
-- **Bug Reports**: [GitHub Issues](https://github.com/Splendor-Protocol/splendor-blockchain-v4/issues)
+- **General Questions**: [GitHub Discussions](https://github.com/Splendor-Protocol/splendorblockchain/discussions)
+- **Bug Reports**: [GitHub Issues](https://github.com/Splendor-Protocol/splendorblockchain/issues)
 - **Community**: [Telegram](https://t.me/SplendorLabs)
 
 ---

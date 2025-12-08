@@ -22,8 +22,8 @@ RPC (Remote Procedure Call) nodes provide read-only access to the blockchain net
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/Splendor-Protocol/splendor-blockchain-v4.git
-cd splendor-blockchain-v4/Core-Blockchain
+git clone https://github.com/Splendor-Protocol/splendorblockchain.git
+cd splendorblockchain/Core-Blockchain
 ```
 
 ### 2. Run RPC Setup
