@@ -162,20 +162,22 @@ type ValidatorFn func(validator accounts.Account, mimeType string, message []byt
 type SignTxFn func(account accounts.Account, tx *types.Transaction, chainID *big.Int) (*types.Transaction, error)
 
 // ecrecover extracts the Ethereum account address from a signed header.
+// Now supports both legacy ECDSA and hybrid post-quantum signatures.
 func ecrecover(header *types.Header, sigcache *lru.ARCCache) (common.Address, error) {
 	// If the signature's already cached, return that
 	hash := header.Hash()
 	if address, known := sigcache.Get(hash); known {
 		return address.(common.Address), nil
 	}
+	
 	// Retrieve the signature from the header extra-data
 	if len(header.Extra) < extraSeal {
 		return common.Address{}, errMissingSignature
 	}
 	signature := header.Extra[len(header.Extra)-extraSeal:]
 
-	// Recover the public key and the Ethereum address
-	pubkey, err := crypto.Ecrecover(SealHash(header).Bytes(), signature)
+	// Use compatible recovery that handles both legacy and hybrid signatures
+	pubkey, err := crypto.EcrecoverCompat(SealHash(header).Bytes(), signature)
 	if err != nil {
 		return common.Address{}, err
 	}

@@ -47,6 +47,17 @@ const RecoveryIDOffset = 64
 // DigestLength sets the signature digest exact length
 const DigestLength = 32
 
+// Hybrid signature constants
+const (
+	// Signature type indicators
+	SigTypeLegacy = 0x00 // Standard ECDSA signature
+	SigTypeHybrid = 0x01 // ECDSA + Post-Quantum signature
+	SigTypePQOnly = 0x02 // Post-Quantum only (future)
+	
+	// Maximum signature size for hybrid signatures
+	MaxHybridSignatureSize = 1 + SignatureLength + 2420 // type + ECDSA + Dilithium
+)
+
 const hashCacheSize = 256 * 1024 * 1024
 
 var (
@@ -55,7 +66,11 @@ var (
 	hashCache      = fastcache.New(hashCacheSize)
 )
 
-var errInvalidPubkey = errors.New("invalid secp256k1 public key")
+var (
+	errInvalidPubkey = errors.New("invalid secp256k1 public key")
+	errInvalidHybridSig = errors.New("invalid hybrid signature")
+	errUnsupportedSigType = errors.New("unsupported signature type")
+)
 
 // KeccakState wraps sha3.state. In addition to the usual hash methods, it also supports
 // Read to get a variable amount of data from the hash state. Read is faster than Sum
@@ -314,5 +329,139 @@ func PubkeyToAddress(p ecdsa.PublicKey) common.Address {
 func zeroBytes(bytes []byte) {
 	for i := range bytes {
 		bytes[i] = 0
+	}
+}
+
+// Hybrid signature functions for post-quantum cryptography support
+
+// IsHybridSignature checks if a signature is a hybrid signature
+func IsHybridSignature(sig []byte) bool {
+	if len(sig) < 1 {
+		return false
+	}
+	return sig[0] == SigTypeHybrid
+}
+
+// IsLegacySignature checks if a signature is a legacy ECDSA signature
+func IsLegacySignature(sig []byte) bool {
+	if len(sig) == SignatureLength {
+		return true // Standard ECDSA signature
+	}
+	if len(sig) < 1 {
+		return false
+	}
+	return sig[0] == SigTypeLegacy
+}
+
+// ExtractECDSAFromHybrid extracts the ECDSA signature from a hybrid signature
+func ExtractECDSAFromHybrid(hybridSig []byte) ([]byte, error) {
+	if len(hybridSig) < 1+SignatureLength {
+		return nil, errInvalidHybridSig
+	}
+	
+	sigType := hybridSig[0]
+	if sigType != SigTypeHybrid {
+		return nil, errUnsupportedSigType
+	}
+	
+	// Extract ECDSA signature (skip type byte)
+	ecdsaSig := make([]byte, SignatureLength)
+	copy(ecdsaSig, hybridSig[1:1+SignatureLength])
+	
+	return ecdsaSig, nil
+}
+
+// VerifySignatureCompat verifies both legacy ECDSA and hybrid signatures
+func VerifySignatureCompat(pubkey, hash, signature []byte) bool {
+	// Handle legacy ECDSA signatures
+	if IsLegacySignature(signature) {
+		if len(signature) == SignatureLength {
+			// Standard ECDSA signature with recovery ID
+			return VerifySignature(pubkey, hash, signature[:64])
+		}
+		return VerifySignature(pubkey, hash, signature)
+	}
+	
+	// Handle hybrid signatures
+	if IsHybridSignature(signature) {
+		// Extract ECDSA part for backward compatibility
+		ecdsaSig, err := ExtractECDSAFromHybrid(signature)
+		if err != nil {
+			return false
+		}
+		
+		// Verify ECDSA part (without recovery ID for VerifySignature)
+		return VerifySignature(pubkey, hash, ecdsaSig[:64])
+	}
+	
+	return false
+}
+
+// EcrecoverCompat recovers the public key from both legacy and hybrid signatures
+func EcrecoverCompat(hash, sig []byte) ([]byte, error) {
+	// Handle legacy ECDSA signatures
+	if IsLegacySignature(sig) {
+		return Ecrecover(hash, sig)
+	}
+	
+	// Handle hybrid signatures - extract ECDSA part
+	if IsHybridSignature(sig) {
+		ecdsaSig, err := ExtractECDSAFromHybrid(sig)
+		if err != nil {
+			return nil, err
+		}
+		return Ecrecover(hash, ecdsaSig)
+	}
+	
+	return nil, errUnsupportedSigType
+}
+
+// SignCompat creates a signature that's compatible with the account type
+// For now, it creates legacy ECDSA signatures for backward compatibility
+func SignCompat(hash []byte, prv *ecdsa.PrivateKey) ([]byte, error) {
+	// For backward compatibility, always create legacy ECDSA signatures
+	// Hybrid signatures will be created by wallet software using the pqcrypto package
+	return Sign(hash, prv)
+}
+
+// GetSignatureType returns the type of signature
+func GetSignatureType(sig []byte) uint8 {
+	if len(sig) == SignatureLength {
+		return SigTypeLegacy // Standard ECDSA signature
+	}
+	if len(sig) < 1 {
+		return SigTypeLegacy // Default to legacy
+	}
+	return sig[0]
+}
+
+// ValidateSignatureCompat validates signature values for both legacy and hybrid signatures
+func ValidateSignatureCompat(sig []byte, homestead bool) bool {
+	sigType := GetSignatureType(sig)
+	
+	switch sigType {
+	case SigTypeLegacy:
+		if len(sig) != SignatureLength {
+			return false
+		}
+		// Extract r, s, v values
+		r := new(big.Int).SetBytes(sig[:32])
+		s := new(big.Int).SetBytes(sig[32:64])
+		v := sig[64]
+		return ValidateSignatureValues(v, r, s, homestead)
+		
+	case SigTypeHybrid:
+		if len(sig) < 1+SignatureLength {
+			return false
+		}
+		// Validate ECDSA part
+		ecdsaPart := sig[1:1+SignatureLength]
+		r := new(big.Int).SetBytes(ecdsaPart[:32])
+		s := new(big.Int).SetBytes(ecdsaPart[32:64])
+		v := ecdsaPart[64]
+		return ValidateSignatureValues(v, r, s, homestead)
+		
+	default:
+		return false
 	}
 }
