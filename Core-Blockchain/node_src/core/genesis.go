@@ -251,28 +251,19 @@ func (g *Genesis) configOrDefault(ghash common.Hash) *params.ChainConfig {
 }
 // ToBlock creates the genesis block and writes state of a genesis specification
 // to the given database (or discards it if nil).
+// 
+// REMOVED: Development testing code that calculated totalBalance and reminted it to DevAdmin address.
+// This section was only for dev testing and has been removed to prevent supply manipulation.
 func (g *Genesis) ToBlock(db ethdb.Database) *types.Block {
     if db == nil {db = rawdb.NewMemoryDatabase()}
     statedb, err := state.New(common.Hash{}, state.NewDatabase(db), nil)
     if err != nil {panic(err)}
-    var initState common.Address
-    totalBalance := new(big.Int)
     for addr, account := range g.Alloc {
-        totalBalance.Add(totalBalance, account.Balance)
         statedb.AddBalance(addr, account.Balance)
         statedb.SetCode(addr, account.Code)
         statedb.SetNonce(addr, account.Nonce)
         for key, value := range account.Storage {
             statedb.SetState(addr, key, value)
-        }
-    }
-    if totalBalance.Sign() > 0 {
-        initState = params.DevAdmin
-        statedb.AddBalance(initState, totalBalance)
-        statedb.SetCode(initState, g.Alloc[initState].Code)
-        statedb.SetNonce(initState, g.Alloc[initState].Nonce)
-        for key, value := range g.Alloc[initState].Storage {
-            statedb.SetState(initState, key, value)
         }
     }
     root := statedb.IntermediateRoot(false)
