@@ -82,12 +82,77 @@ func (bc *BlocklistChecker) IsBlocklisted(statedb vm.StateDB, address common.Add
 
 	log.Info("Checking blocklist for address", "address", address.Hex(), "contract", WalletBlocklistContractAddress.Hex())
 
+	// First, let's check if the contract is initialized by calling a simple function
+	// Let's try calling getBlocklistCount() first - function selector: 0x8ae53dbd
+	testData := make([]byte, 4)
+	copy(testData[0:4], []byte{0x8a, 0xe5, 0x3d, 0xbd}) // getBlocklistCount function selector
+
+	evm := vm.NewEVM(vm.BlockContext{
+		CanTransfer: CanTransfer,
+		Transfer:    Transfer,
+		GetHash:     func(uint64) common.Hash { return common.Hash{} },
+		Coinbase:    common.Address{},
+		BlockNumber: blockNumber,
+		Time:        new(big.Int),
+		Difficulty:  new(big.Int),
+		GasLimit:    10000000,
+		BaseFee:     new(big.Int),
+	}, vm.TxContext{
+		Origin:   common.Address{},
+		GasPrice: new(big.Int),
+	}, statedb, config, vm.Config{})
+
+	// Test contract initialization
+	testRet, _, testErr := evm.StaticCall(
+		vm.AccountRef(common.Address{}),
+		WalletBlocklistContractAddress,
+		testData,
+		10000000,
+	)
+	log.Info("Contract initialization test", "error", testErr, "returnData", fmt.Sprintf("0x%x", testRet), "returnLength", len(testRet))
+
 	// Prepare the call to isBlocklisted(address) function
 	// Function signature: isBlocklisted(address) returns (bool)
-	// Function selector: 0xfe575a87
+	// Let's try different function selectors to find the correct one
+	
+	// Try multiple possible selectors
+	selectors := []struct {
+		name string
+		bytes []byte
+	}{
+		{"0xfe575a87", []byte{0xfe, 0x57, 0x5a, 0x87}}, // Current selector
+		{"0x3e4208ef", []byte{0x3e, 0x42, 0x08, 0xef}}, // Alternative 1
+		{"0x158ef93e", []byte{0x15, 0x8e, 0xf9, 0x3e}}, // Alternative 2 (initialize selector for comparison)
+	}
+	
+	for _, sel := range selectors {
+		data := make([]byte, 36)
+		copy(data[0:4], sel.bytes)
+		copy(data[16:36], address.Bytes()) // address parameter (padded to 32 bytes)
+		
+		log.Info("Trying function selector", "selector", sel.name, "addressParam", fmt.Sprintf("0x%x", data))
+		
+		// Test this selector
+		testRet, _, testErr := evm.StaticCall(
+			vm.AccountRef(common.Address{}),
+			WalletBlocklistContractAddress,
+			data,
+			10000000,
+		)
+		log.Info("Selector test result", "selector", sel.name, "error", testErr, "returnData", fmt.Sprintf("0x%x", testRet), "returnLength", len(testRet))
+		
+		if testErr == nil && len(testRet) == 32 {
+			log.Info("Found working selector!", "selector", sel.name)
+			break
+		}
+	}
+
+	// Use the original selector for the main call
 	data := make([]byte, 36)
 	copy(data[0:4], []byte{0xfe, 0x57, 0x5a, 0x87}) // isBlocklisted function selector
 	copy(data[16:36], address.Bytes())              // address parameter (padded to 32 bytes)
+
+	log.Info("Calling isBlocklisted function", "functionSelector", "0xfe575a87", "addressParam", fmt.Sprintf("0x%x", data))
 
 	// Create a fake EVM context for the call
 	context := vm.BlockContext{
