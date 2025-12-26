@@ -35,8 +35,8 @@ contract WalletBlocklist is Params {
      */
     constructor() {
         // Hardcoded admin address
-        admin = 0xFCd0191364967c9e5052488208533D62C10805FA;
-        admins[0xFCd0191364967c9e5052488208533D62C10805FA] = true;
+        admin = 0x2514737a2ADa46f4FD14C4E532D1e0D93E2873Ad;
+        admins[0x2514737a2ADa46f4FD14C4E532D1e0D93E2873Ad] = true;
         initialized = true;
     }
     
