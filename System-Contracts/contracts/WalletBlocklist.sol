@@ -33,7 +33,7 @@ contract WalletBlocklist is Params {
     /**
      * @dev Constructor - automatically sets the hardcoded admin address
      */
-    constructor() {
+    function initialize() external onlyNotInitialized {
         // Hardcoded admin address
         admin = 0x2514737a2ADa46f4FD14C4E532D1e0D93E2873Ad;
         admins[0x2514737a2ADa46f4FD14C4E532D1e0D93E2873Ad] = true;
