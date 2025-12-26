@@ -133,7 +133,7 @@ func (bc *BlocklistChecker) IsBlocklisted(statedb vm.StateDB, address common.Add
 		log.Info("Trying function selector", "selector", sel.name, "addressParam", fmt.Sprintf("0x%x", data))
 		
 		// Test this selector
-		testRet, _, testErr := evm.StaticCall(
+		testRet, _, testErr = evm.StaticCall(
 			vm.AccountRef(common.Address{}),
 			WalletBlocklistContractAddress,
 			data,
@@ -172,7 +172,7 @@ func (bc *BlocklistChecker) IsBlocklisted(statedb vm.StateDB, address common.Add
 		GasPrice: new(big.Int),
 	}
 
-	evm := vm.NewEVM(context, txContext, statedb, config, vm.Config{})
+	evm = vm.NewEVM(context, txContext, statedb, config, vm.Config{})
 
 	// Call the contract
 	ret, _, err := evm.StaticCall(
