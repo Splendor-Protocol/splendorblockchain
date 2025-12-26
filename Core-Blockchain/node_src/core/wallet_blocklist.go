@@ -83,12 +83,12 @@ func (bc *BlocklistChecker) IsBlocklisted(statedb vm.StateDB, address common.Add
 	log.Info("Checking blocklist for address", "address", address.Hex(), "contract", WalletBlocklistContractAddress.Hex())
 
 	// Prepare the call to isBlocklisted(address) function
-	// Function selector: 0x158ef93e
+	// Function selector: 0x53c9b97f
 	data := make([]byte, 36)
-	copy(data[0:4], []byte{0x15, 0x8e, 0xf9, 0x3e}) // isBlocklisted function selector
+	copy(data[0:4], []byte{0x53, 0xc9, 0xb9, 0x7f}) // isBlocklisted function selector
 	copy(data[16:36], address.Bytes())              // address parameter (padded to 32 bytes)
 
-	log.Info("Calling isBlocklisted function", "functionSelector", "0x158ef93e", "addressParam", fmt.Sprintf("0x%x", data))
+	log.Info("Calling isBlocklisted function", "functionSelector", "0x53c9b97f", "addressParam", fmt.Sprintf("0x%x", data))
 
 	// Create EVM context for the call
 	evm := vm.NewEVM(vm.BlockContext{
@@ -127,8 +127,26 @@ func (bc *BlocklistChecker) IsBlocklisted(statedb vm.StateDB, address common.Add
 		return false
 	}
 
+	// Debug: Log the full return data for analysis
+	log.Info("Raw contract return data", "address", address.Hex(), "returnData", fmt.Sprintf("0x%x", ret), "length", len(ret))
+	
 	// Check if the last byte is non-zero (true)
+	// Also check if all bytes are zero (which would indicate false)
 	isBlocked := ret[31] != 0
+	
+	// Additional debugging: check if return data is all zeros or all ones
+	allZeros := true
+	allOnes := true
+	for _, b := range ret {
+		if b != 0 {
+			allZeros = false
+		}
+		if b != 0xff {
+			allOnes = false
+		}
+	}
+	
+	log.Info("Return data analysis", "address", address.Hex(), "allZeros", allZeros, "allOnes", allOnes, "lastByte", fmt.Sprintf("0x%02x", ret[31]))
 
 	log.Info("Blocklist check result", "address", address.Hex(), "isBlocked", isBlocked, "returnData", fmt.Sprintf("0x%x", ret))
 
