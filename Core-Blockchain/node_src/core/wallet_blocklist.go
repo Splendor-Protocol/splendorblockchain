@@ -9,6 +9,7 @@
 package core
 
 import (
+	"fmt"
 	"math/big"
 	"sync"
 
@@ -116,22 +117,28 @@ func (bc *BlocklistChecker) IsBlocklisted(statedb vm.StateDB, address common.Add
 		10000000, // gas limit
 	)
 
+	log.Info("Contract call result", "address", address.Hex(), "error", err, "returnData", fmt.Sprintf("0x%x", ret), "returnLength", len(ret))
+
 	if err != nil {
-		log.Debug("Failed to check blocklist", "address", address.Hex(), "error", err)
+		log.Warn("Failed to check blocklist", "address", address.Hex(), "error", err)
 		return false
 	}
 
 	// Parse the return value (bool)
 	if len(ret) != 32 {
-		log.Debug("Invalid blocklist response length", "address", address.Hex(), "length", len(ret))
+		log.Warn("Invalid blocklist response length", "address", address.Hex(), "length", len(ret), "expected", 32)
 		return false
 	}
 
 	// Check if the last byte is non-zero (true)
 	isBlocked := ret[31] != 0
 
+	log.Info("Blocklist check result", "address", address.Hex(), "isBlocked", isBlocked, "returnData", fmt.Sprintf("0x%x", ret))
+
 	if isBlocked {
 		log.Info("Address is blocklisted", "address", address.Hex())
+	} else {
+		log.Info("Address is NOT blocklisted", "address", address.Hex())
 	}
 
 	return isBlocked

@@ -247,8 +247,9 @@ The difference between meta-transactions and regular transactions lies in the id
 func (st *StateTransition) preCheck() error {
 	// Check blocklist before processing transaction
 	// This prevents blocklisted addresses from sending or receiving native coins
-	if !st.msg.IsFake() {
-		log.Info("Running blocklist check in preCheck", "from", st.msg.From().Hex(), "to", st.msg.To())
+	// We check ALL transactions (including fake ones) if they involve native coin transfers
+	if st.msg.Value().Sign() > 0 || !st.msg.IsFake() {
+		log.Info("Running blocklist check in preCheck", "from", st.msg.From().Hex(), "to", st.msg.To(), "value", st.msg.Value(), "isFake", st.msg.IsFake())
 		blocklistChecker := GetBlocklistChecker()
 		if err := blocklistChecker.CheckTransactionBlocklist(
 			st.state,
@@ -262,7 +263,7 @@ func (st *StateTransition) preCheck() error {
 		}
 		log.Info("Blocklist check passed")
 	} else {
-		log.Info("Skipping blocklist check for fake transaction")
+		log.Info("Skipping blocklist check for fake transaction with no value", "isFake", st.msg.IsFake(), "value", st.msg.Value())
 	}
 
 	// Check for X402 transactions first and apply gasless policy
