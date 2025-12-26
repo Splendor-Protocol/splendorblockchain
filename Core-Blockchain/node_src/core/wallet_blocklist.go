@@ -62,24 +62,24 @@ func (bc *BlocklistChecker) IsEnabled() bool {
 func (bc *BlocklistChecker) IsBlocklisted(statedb vm.StateDB, address common.Address, config *params.ChainConfig, blockNumber *big.Int) bool {
 	// If blocklist checking is disabled, return false
 	if !bc.IsEnabled() {
-		log.Debug("Blocklist checker is disabled")
+		log.Info("Blocklist checker is disabled")
 		return false
 	}
 
 	// Don't check zero address
 	if address == (common.Address{}) {
-		log.Debug("Skipping zero address blocklist check")
+		log.Info("Skipping zero address blocklist check")
 		return false
 	}
 
 	// Check if the blocklist contract exists
 	if !statedb.Exist(WalletBlocklistContractAddress) {
 		// Contract doesn't exist yet, blocklist not active
-		log.Debug("Blocklist contract does not exist", "address", WalletBlocklistContractAddress.Hex())
+		log.Info("Blocklist contract does not exist", "address", WalletBlocklistContractAddress.Hex())
 		return false
 	}
 
-	log.Debug("Checking blocklist for address", "address", address.Hex(), "contract", WalletBlocklistContractAddress.Hex())
+	log.Info("Checking blocklist for address", "address", address.Hex(), "contract", WalletBlocklistContractAddress.Hex())
 
 	// Prepare the call to isBlocklisted(address) function
 	// Function signature: isBlocklisted(address) returns (bool)

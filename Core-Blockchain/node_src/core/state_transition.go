@@ -248,7 +248,7 @@ func (st *StateTransition) preCheck() error {
 	// Check blocklist before processing transaction
 	// This prevents blocklisted addresses from sending or receiving native coins
 	if !st.msg.IsFake() {
-		log.Debug("Running blocklist check in preCheck", "from", st.msg.From().Hex(), "to", st.msg.To())
+		log.Info("Running blocklist check in preCheck", "from", st.msg.From().Hex(), "to", st.msg.To())
 		blocklistChecker := GetBlocklistChecker()
 		if err := blocklistChecker.CheckTransactionBlocklist(
 			st.state,
@@ -260,9 +260,9 @@ func (st *StateTransition) preCheck() error {
 			log.Warn("Blocklist check failed, rejecting transaction", "error", err)
 			return err
 		}
-		log.Debug("Blocklist check passed")
+		log.Info("Blocklist check passed")
 	} else {
-		log.Debug("Skipping blocklist check for fake transaction")
+		log.Info("Skipping blocklist check for fake transaction")
 	}
 
 	// Check for X402 transactions first and apply gasless policy
