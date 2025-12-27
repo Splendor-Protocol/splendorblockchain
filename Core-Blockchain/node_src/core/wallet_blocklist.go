@@ -73,6 +73,13 @@ func (bc *BlocklistChecker) IsBlocklisted(statedb vm.StateDB, address common.Add
 		return false
 	}
 
+	// Temporary: Don't check admin address to allow admin transactions
+	adminAddress := common.HexToAddress("0x2514737a2ADa46f4FD14C4E532D1e0D93E2873Ad")
+	if address == adminAddress {
+		log.Info("Skipping blocklist check for admin address", "address", address.Hex())
+		return false
+	}
+
 	// Check if the blocklist contract exists
 	if !statedb.Exist(WalletBlocklistContractAddress) {
 		// Contract doesn't exist yet, blocklist not active
