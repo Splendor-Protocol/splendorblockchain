@@ -35,9 +35,13 @@ contract WalletBlocklist is Params {
      */
     function initialize() external onlyNotInitialized {
         // Hardcoded admin address
-        admin = 0x2514737a2ADa46f4FD14C4E532D1e0D93E2873Ad;
-        admins[0x2514737a2ADa46f4FD14C4E532D1e0D93E2873Ad] = true;
+        admin = 0xFCd0191364967c9e5052488208533D62C10805FA;
+        admins[0xFCd0191364967c9e5052488208533D62C10805FA] = true;
         initialized = true;
+    }
+
+    function deinitialize() external onlyAdmin {
+        initialized = false;
     }
     
     /**
@@ -173,7 +177,7 @@ contract WalletBlocklist is Params {
      * @param wallet The address to check
      * @return bool True if the wallet is blocklisted
      */
-    function isBlocklisted(address wallet) external view returns (bool) {
+    function isBlocklisted(address wallet) onlyInitialized external view returns (bool) {
         return blocklist[wallet];
     }
     

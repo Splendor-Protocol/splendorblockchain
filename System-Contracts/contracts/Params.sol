@@ -28,7 +28,7 @@ contract Params {
     // System params
     uint16 public constant MaxValidators = 10000;
     // Validator have to wait StakingLockPeriod blocks to withdraw staking
-    uint64 public constant StakingLockPeriod = 86400;
+    uint64 public constant StakingLockPeriod = 31536000;
     uint256 public constant MinimalStakingCoin = 32 ether;
     
     // Tiered validator system
