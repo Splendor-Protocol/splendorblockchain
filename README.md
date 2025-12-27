@@ -138,11 +138,11 @@ Splendor uses an enhanced Proof of Authority consensus called "Congress" that pr
 
 ### System Contracts
 Pre-deployed contracts for network governance:
-- **Validators** (`0x...F000`): Validator management and staking
-- **Punish** (`0x...F001`): Slashing and penalty mechanisms
-- **Proposal** (`0x...F002`): Governance proposals and voting
-- **Slashing** (`0x...F007`): Misbehavior detection and penalties
-<!-- - **Params** (`0x...F004`): Network parameter management -->
+- **Validators** (`0x000000000000000000000000000000000000F000`): Validator management and staking
+- **Punish** (`0x000000000000000000000000000000000000F001`): Slashing and penalty mechanisms
+- **Proposal** (`0x000000000000000000000000000000000000F002`): Governance proposals and voting
+- **Slashing** (`0x000000000000000000000000000000000000F007`): Misbehavior detection and penalties
+- **WalletBlocklist** (`0x0000000000000000000000000000000000001007`): Wallet blocklist management
 
 ## 💳 X402 Native Payments - World's First!
 
@@ -451,4 +451,4 @@ Splendor Blockchain is production software, but blockchain technology involves i
 *Empowering the decentralized future, one block at a time.*
 
 ---
-*Last updated: November 8, 2025*
+*Last updated: December 27, 2025*
