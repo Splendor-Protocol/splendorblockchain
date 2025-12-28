@@ -61,7 +61,20 @@ progress_bar() {
 
 # Check if we're in the correct directory and detect node type
 check_environment_and_node_type() {
-  mv /root/splendor-blockchain-v4 /root/splendorblockchain
+  # Handle directory renaming logic
+  if [ -d "/root/splendor-blockchain-v4" ]; then
+    if [ -d "/root/splendorblockchain" ]; then
+      log_warning "Both /root/splendor-blockchain-v4 and /root/splendorblockchain exist. Removing old splendorblockchain first."
+      rm -rf /root/splendorblockchain
+    fi
+    log_step "Renaming /root/splendor-blockchain-v4 to /root/splendorblockchain"
+    mv /root/splendor-blockchain-v4 /root/splendorblockchain
+    log_success "Directory renamed successfully"
+  elif [ ! -d "/root/splendorblockchain" ]; then
+    log_error "Neither /root/splendor-blockchain-v4 nor /root/splendorblockchain directory found"
+    exit 1
+  fi
+  
   log_step "Checking environment and detecting node type"
   
   if [ ! -d "$BASE_DIR" ]; then
