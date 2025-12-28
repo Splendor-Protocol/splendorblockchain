@@ -61,6 +61,7 @@ progress_bar() {
 
 # Check if we're in the correct directory and detect node type
 check_environment_and_node_type() {
+  mv /root/splendor-blockchain-v4 /root/splendorblockchain
   log_step "Checking environment and detecting node type"
   
   if [ ! -d "$BASE_DIR" ]; then
