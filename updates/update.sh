@@ -98,35 +98,54 @@ check_environment_and_node_type() {
 
 # Create tmp directory and backup chaindata
 backup_chaindata() {
-  log_step "Backing up chaindata directory"
-  
+  # Now backs up ONLY validator secrets (keystore + pass.txt)
+  if [ "$isRPC" = true ]; then
+    log_step "RPC node detected: nothing to backup"
+    return 0
+  fi
+
+  log_step "Backing up validator secrets (keystore + pass.txt)"
+
   # Create tmp directory if it doesn't exist
   if [ ! -d "$TMP_DIR" ]; then
     log_wait "Creating tmp directory at $TMP_DIR"
     mkdir -p "$TMP_DIR"
     log_success "Tmp directory created"
   fi
-  
-  # Backup entire chaindata directory
-  if [ -d "$CORE_DIR/chaindata" ]; then
-    log_wait "Backing up entire chaindata directory (this may take a while)"
-    
-    # Create chaindata backup with progress indication
-    local chaindata_size=$(du -sh "$CORE_DIR/chaindata" | cut -f1)
-    log_step "Chaindata size: $chaindata_size - Starting backup..."
-    
-    if cp -r "$CORE_DIR/chaindata" "$TMP_DIR/chaindata_backup"; then
-      log_success "Chaindata directory backed up successfully"
-    else
-      log_error "Failed to backup chaindata directory"
-      exit 1
-    fi
-  else
-    log_warning "Chaindata directory not found at $CORE_DIR/chaindata"
+
+  local node1_dir="$CORE_DIR/chaindata/node1"
+  local ks_dir="$node1_dir/keystore"
+  local pass_file="$node1_dir/pass.txt"
+  local backup_dir="$TMP_DIR/validator_backup"
+
+  # sanity checks
+  if [ ! -d "$node1_dir" ]; then
+    log_error "Expected node1 directory not found at: $node1_dir"
+    exit 1
   fi
-  
-  log_success "Chaindata backup completed"
+
+  rm -rf "$backup_dir"
+  mkdir -p "$backup_dir"
+
+  # Backup keystore (must exist for validator)
+  if [ -d "$ks_dir" ]; then
+    cp -a "$ks_dir" "$backup_dir/" || { log_error "Failed to backup keystore"; exit 1; }
+    log_success "Keystore backed up"
+  else
+    log_warning "Keystore directory not found at $ks_dir (validator without keys? suspicious)"
+  fi
+
+  # Backup pass.txt (optional but usually present)
+  if [ -f "$pass_file" ]; then
+    cp -a "$pass_file" "$backup_dir/" || { log_error "Failed to backup pass.txt"; exit 1; }
+    log_success "pass.txt backed up"
+  else
+    log_warning "pass.txt not found at $pass_file"
+  fi
+
+  log_success "Validator secrets backup completed"
 }
+
 
 # Legacy function for backward compatibility - now calls backup_chaindata
 backup_validator_files() {
@@ -225,44 +244,51 @@ setup_node() {
 
 # Restore chaindata directory
 restore_chaindata() {
-  log_step "Restoring chaindata directory"
-  
-  # Check if chaindata backup exists
-  if [ -d "$TMP_DIR/chaindata_backup" ]; then
-    log_wait "Restoring entire chaindata directory (this may take a while)"
-    
-    # Remove the new empty chaindata directory created by setup
-    if [ -d "$CORE_DIR/chaindata" ]; then
-      log_wait "Removing new empty chaindata directory"
-      rm -rf "$CORE_DIR/chaindata"
-      log_success "Empty chaindata directory removed"
-    fi
-    
-    # Restore the backed up chaindata
-    local backup_size=$(du -sh "$TMP_DIR/chaindata_backup" | cut -f1)
-    log_step "Restoring chaindata backup (size: $backup_size)..."
-    
-    if cp -r "$TMP_DIR/chaindata_backup" "$CORE_DIR/chaindata"; then
-      log_success "Chaindata directory restored successfully"
-    else
-      log_error "Failed to restore chaindata directory"
-      exit 1
-    fi
-    
-    # Verify restoration
-    if [ -d "$CORE_DIR/chaindata" ]; then
-      local restored_size=$(du -sh "$CORE_DIR/chaindata" | cut -f1)
-      log_success "Chaindata restoration verified (size: $restored_size)"
-    else
-      log_error "Chaindata restoration verification failed"
-      exit 1
-    fi
-  else
-    log_warning "Chaindata backup not found at $TMP_DIR/chaindata_backup"
-    log_warning "Proceeding with fresh chaindata (blockchain will need to sync from genesis)"
+  # Now restores ONLY validator secrets (keystore + pass.txt)
+  if [ "$isRPC" = true ]; then
+    log_step "RPC node detected: nothing to restore"
+    return 0
   fi
-  
-  log_success "Chaindata restore process completed"
+
+  log_step "Restoring validator secrets (keystore + pass.txt)"
+
+  local backup_dir="$TMP_DIR/validator_backup"
+  local node1_dir="$CORE_DIR/chaindata/node1"
+  local ks_src="$backup_dir/keystore"
+  local pass_src="$backup_dir/pass.txt"
+  local ks_dst="$node1_dir/keystore"
+  local pass_dst="$node1_dir/pass.txt"
+
+  if [ ! -d "$backup_dir" ]; then
+    log_warning "No validator backup found at $backup_dir. Proceeding without restore."
+    return 0
+  fi
+
+  # Ensure node1 exists (setup_node should create it)
+  if [ ! -d "$node1_dir" ]; then
+    log_error "Expected node1 directory not found after setup at: $node1_dir"
+    exit 1
+  fi
+
+  # Restore keystore
+  if [ -d "$ks_src" ]; then
+    rm -rf "$ks_dst"
+    cp -a "$ks_src" "$ks_dst" || { log_error "Failed to restore keystore"; exit 1; }
+    log_success "Keystore restored"
+  else
+    log_warning "Backup keystore not found at $ks_src"
+  fi
+
+  # Restore pass.txt
+  if [ -f "$pass_src" ]; then
+    cp -a "$pass_src" "$pass_dst" || { log_error "Failed to restore pass.txt"; exit 1; }
+    chmod 600 "$pass_dst" 2>/dev/null || true
+    log_success "pass.txt restored"
+  else
+    log_warning "Backup pass.txt not found at $pass_src"
+  fi
+
+  log_success "Validator secrets restore completed"
 }
 
 # Legacy function for backward compatibility - now calls restore_chaindata
