@@ -120,6 +120,9 @@ System-Contracts/typechain-types
 # Validator Controller - Personal use only, ignore entire directory
 validator-controller/
 
+# Validator lists (contains sensitive wallet addresses)
+Core-Blockchain/plugins/sync-helper/all-validators-list.json
+
 # Solidity coverage files
 coverage/
 coverage.json
