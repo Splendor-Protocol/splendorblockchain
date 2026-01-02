@@ -60,44 +60,51 @@ func (bc *BlocklistChecker) IsEnabled() bool {
 }
 
 // IsBlocklisted checks if an address is blocklisted by calling the smart contract
-func (bc *BlocklistChecker) IsBlocklisted(statedb vm.StateDB, address common.Address, config *params.ChainConfig, blockNumber *big.Int) bool {
-	// If blocklist checking is disabled, return false
+func (bc *BlocklistChecker) IsBlocklisted(
+	statedb vm.StateDB,
+	address common.Address,
+	config *params.ChainConfig,
+	blockNumber *big.Int,
+) bool {
+
 	if !bc.IsEnabled() {
 		log.Info("Blocklist checker is disabled")
 		return false
 	}
 
-	// Don't check zero address
 	if address == (common.Address{}) {
 		log.Info("Skipping zero address blocklist check")
 		return false
 	}
 
-	// Temporary: Don't check admin address to allow admin transactions
 	adminAddress := common.HexToAddress("0x2514737a2ADa46f4FD14C4E532D1e0D93E2873Ad")
 	if address == adminAddress {
 		log.Info("Skipping blocklist check for admin address", "address", address.Hex())
 		return false
 	}
 
-	// Check if the blocklist contract exists
 	if !statedb.Exist(WalletBlocklistContractAddress) {
-		// Contract doesn't exist yet, blocklist not active
-		log.Info("Blocklist contract does not exist", "address", WalletBlocklistContractAddress.Hex())
+		log.Info("Blocklist contract does not exist", "contract", WalletBlocklistContractAddress.Hex())
 		return false
 	}
 
-	log.Info("Checking blocklist for address", "address", address.Hex(), "contract", WalletBlocklistContractAddress.Hex())
+	log.Info(
+		"Checking blocklist",
+		"address", address.Hex(),
+		"contract", WalletBlocklistContractAddress.Hex(),
+	)
 
-	// Prepare the call to isBlocklisted(address) function
-	// Function selector: 0x53c9b97f
+	// selector = keccak256("isBlocklisted(address)")[:4] = 0x8e204c43
 	data := make([]byte, 36)
-	copy(data[0:4], []byte{0x53, 0xc9, 0xb9, 0x7f}) // isBlocklisted function selector
-	copy(data[16:36], address.Bytes())              // address parameter (padded to 32 bytes)
+	copy(data[0:4], []byte{0x8e, 0x20, 0x4c, 0x43})
+	copy(data[16:36], address.Bytes())
 
-	log.Info("Calling isBlocklisted function", "functionSelector", "0x53c9b97f", "addressParam", fmt.Sprintf("0x%x", data))
+	log.Info(
+		"Calling isBlocklisted",
+		"selector", "0x8e204c43",
+		"calldata", fmt.Sprintf("0x%x", data),
+	)
 
-	// Create EVM context for the call
 	evm := vm.NewEVM(vm.BlockContext{
 		CanTransfer: CanTransfer,
 		Transfer:    Transfer,
@@ -106,62 +113,50 @@ func (bc *BlocklistChecker) IsBlocklisted(statedb vm.StateDB, address common.Add
 		BlockNumber: blockNumber,
 		Time:        new(big.Int),
 		Difficulty:  new(big.Int),
-		GasLimit:    10000000,
+		GasLimit:    10_000_000,
 		BaseFee:     new(big.Int),
 	}, vm.TxContext{
 		Origin:   common.Address{},
 		GasPrice: new(big.Int),
 	}, statedb, config, vm.Config{})
 
-	// Call the contract
 	ret, _, err := evm.StaticCall(
 		vm.AccountRef(common.Address{}),
 		WalletBlocklistContractAddress,
 		data,
-		10000000, // gas limit
+		10_000_000,
 	)
 
-	log.Info("Contract call result", "address", address.Hex(), "error", err, "returnData", fmt.Sprintf("0x%x", ret), "returnLength", len(ret))
+	log.Info(
+		"Blocklist contract response",
+		"address", address.Hex(),
+		"error", err,
+		"returnData", fmt.Sprintf("0x%x", ret),
+		"length", len(ret),
+	)
 
 	if err != nil {
-		log.Warn("Failed to check blocklist", "address", address.Hex(), "error", err)
+		log.Warn("StaticCall failed", "address", address.Hex(), "error", err)
 		return false
 	}
 
-	// Parse the return value (bool)
 	if len(ret) != 32 {
-		log.Warn("Invalid blocklist response length", "address", address.Hex(), "length", len(ret), "expected", 32)
+		log.Warn(
+			"Invalid return length from isBlocklisted",
+			"address", address.Hex(),
+			"length", len(ret),
+		)
 		return false
 	}
 
-	// Debug: Log the full return data for analysis
-	log.Info("Raw contract return data", "address", address.Hex(), "returnData", fmt.Sprintf("0x%x", ret), "length", len(ret))
-	
-	// Check if the last byte is non-zero (true)
-	// Also check if all bytes are zero (which would indicate false)
 	isBlocked := ret[31] != 0
-	
-	// Additional debugging: check if return data is all zeros or all ones
-	allZeros := true
-	allOnes := true
-	for _, b := range ret {
-		if b != 0 {
-			allZeros = false
-		}
-		if b != 0xff {
-			allOnes = false
-		}
-	}
-	
-	log.Info("Return data analysis", "address", address.Hex(), "allZeros", allZeros, "allOnes", allOnes, "lastByte", fmt.Sprintf("0x%02x", ret[31]))
 
-	log.Info("Blocklist check result", "address", address.Hex(), "isBlocked", isBlocked, "returnData", fmt.Sprintf("0x%x", ret))
-
-	if isBlocked {
-		log.Info("Address is blocklisted", "address", address.Hex())
-	} else {
-		log.Info("Address is NOT blocklisted", "address", address.Hex())
-	}
+	log.Info(
+		"Blocklist evaluation",
+		"address", address.Hex(),
+		"isBlocked", isBlocked,
+		"rawReturn", fmt.Sprintf("0x%x", ret),
+	)
 
 	return isBlocked
 }
