@@ -112,13 +112,7 @@ check_environment_and_node_type() {
 
 # Create tmp directory and backup chaindata
 backup_chaindata() {
-  # Now backs up ONLY validator secrets (keystore + pass.txt)
-  if [ "$isRPC" = true ]; then
-    log_step "RPC node detected: nothing to backup"
-    return 0
-  fi
-
-  log_step "Backing up validator secrets (keystore + pass.txt)"
+  log_step "Backing up chaindata directory for $node_type node"
 
   # Create tmp directory if it doesn't exist
   if [ ! -d "$TMP_DIR" ]; then
@@ -127,37 +121,36 @@ backup_chaindata() {
     log_success "Tmp directory created"
   fi
 
-  local node1_dir="$CORE_DIR/chaindata/node1"
-  local ks_dir="$node1_dir/keystore"
-  local pass_file="$node1_dir/pass.txt"
-  local backup_dir="$TMP_DIR/validator_backup"
+  local chaindata_dir="$CORE_DIR/chaindata"
+  local backup_dir="$TMP_DIR/chaindata_backup"
 
-  # sanity checks
-  if [ ! -d "$node1_dir" ]; then
-    log_error "Expected node1 directory not found at: $node1_dir"
+  # Check if chaindata directory exists
+  if [ ! -d "$chaindata_dir" ]; then
+    log_warning "Chaindata directory not found at $chaindata_dir - proceeding without backup"
+    return 0
+  fi
+
+  log_wait "Backing up entire chaindata directory (this may take a while for large blockchain data)"
+  
+  # Remove any existing backup
+  rm -rf "$backup_dir"
+  
+  # Create backup directory
+  mkdir -p "$backup_dir"
+
+  # Backup the entire chaindata directory
+  if cp -a "$chaindata_dir" "$backup_dir/" 2>/dev/null; then
+    log_success "Chaindata directory backed up successfully"
+    
+    # Display backup size for reference
+    local backup_size=$(du -sh "$backup_dir/chaindata" 2>/dev/null | cut -f1 || echo "unknown")
+    log_step "Backup size: $backup_size"
+  else
+    log_error "Failed to backup chaindata directory"
     exit 1
   fi
 
-  rm -rf "$backup_dir"
-  mkdir -p "$backup_dir"
-
-  # Backup keystore (must exist for validator)
-  if [ -d "$ks_dir" ]; then
-    cp -a "$ks_dir" "$backup_dir/" || { log_error "Failed to backup keystore"; exit 1; }
-    log_success "Keystore backed up"
-  else
-    log_warning "Keystore directory not found at $ks_dir (validator without keys? suspicious)"
-  fi
-
-  # Backup pass.txt (optional but usually present)
-  if [ -f "$pass_file" ]; then
-    cp -a "$pass_file" "$backup_dir/" || { log_error "Failed to backup pass.txt"; exit 1; }
-    log_success "pass.txt backed up"
-  else
-    log_warning "pass.txt not found at $pass_file"
-  fi
-
-  log_success "Validator secrets backup completed"
+  log_success "Chaindata backup completed for $node_type node"
 }
 
 
@@ -258,51 +251,62 @@ setup_node() {
 
 # Restore chaindata directory
 restore_chaindata() {
-  # Now restores ONLY validator secrets (keystore + pass.txt)
-  if [ "$isRPC" = true ]; then
-    log_step "RPC node detected: nothing to restore"
+  log_step "Restoring chaindata directory for $node_type node"
+
+  local backup_dir="$TMP_DIR/chaindata_backup"
+  local chaindata_src="$backup_dir/chaindata"
+  local chaindata_dst="$CORE_DIR/chaindata"
+
+  # Check if backup exists
+  if [ ! -d "$backup_dir" ] || [ ! -d "$chaindata_src" ]; then
+    log_warning "No chaindata backup found at $backup_dir. Proceeding without restore."
     return 0
   fi
 
-  log_step "Restoring validator secrets (keystore + pass.txt)"
+  log_wait "Restoring entire chaindata directory (this may take a while for large blockchain data)"
 
-  local backup_dir="$TMP_DIR/validator_backup"
-  local node1_dir="$CORE_DIR/chaindata/node1"
-  local ks_src="$backup_dir/keystore"
-  local pass_src="$backup_dir/pass.txt"
-  local ks_dst="$node1_dir/keystore"
-  local pass_dst="$node1_dir/pass.txt"
-
-  if [ ! -d "$backup_dir" ]; then
-    log_warning "No validator backup found at $backup_dir. Proceeding without restore."
-    return 0
+  # Remove the newly created chaindata directory from setup
+  if [ -d "$chaindata_dst" ]; then
+    rm -rf "$chaindata_dst"
   fi
 
-  # Ensure node1 exists (setup_node should create it)
-  if [ ! -d "$node1_dir" ]; then
-    log_error "Expected node1 directory not found after setup at: $node1_dir"
+  # Restore the entire chaindata directory
+  if cp -a "$chaindata_src" "$chaindata_dst" 2>/dev/null; then
+    log_success "Chaindata directory restored successfully"
+    
+    # Display restored size for reference
+    local restored_size=$(du -sh "$chaindata_dst" 2>/dev/null | cut -f1 || echo "unknown")
+    log_step "Restored size: $restored_size"
+    
+    # Verify critical files exist based on node type
+    if [ "$isValidator" = true ]; then
+      local node1_dir="$chaindata_dst/node1"
+      if [ -d "$node1_dir/keystore" ]; then
+        log_success "Validator keystore found in restored data"
+      else
+        log_warning "Validator keystore not found in restored data"
+      fi
+      
+      if [ -f "$node1_dir/pass.txt" ]; then
+        log_success "Validator password file found in restored data"
+        chmod 600 "$node1_dir/pass.txt" 2>/dev/null || true
+      else
+        log_warning "Validator password file not found in restored data"
+      fi
+    elif [ "$isRPC" = true ]; then
+      local node1_dir="$chaindata_dst/node1"
+      if [ -f "$node1_dir/.rpc" ]; then
+        log_success "RPC node marker found in restored data"
+      else
+        log_warning "RPC node marker not found in restored data"
+      fi
+    fi
+  else
+    log_error "Failed to restore chaindata directory"
     exit 1
   fi
 
-  # Restore keystore
-  if [ -d "$ks_src" ]; then
-    rm -rf "$ks_dst"
-    cp -a "$ks_src" "$ks_dst" || { log_error "Failed to restore keystore"; exit 1; }
-    log_success "Keystore restored"
-  else
-    log_warning "Backup keystore not found at $ks_src"
-  fi
-
-  # Restore pass.txt
-  if [ -f "$pass_src" ]; then
-    cp -a "$pass_src" "$pass_dst" || { log_error "Failed to restore pass.txt"; exit 1; }
-    chmod 600 "$pass_dst" 2>/dev/null || true
-    log_success "pass.txt restored"
-  else
-    log_warning "Backup pass.txt not found at $pass_src"
-  fi
-
-  log_success "Validator secrets restore completed"
+  log_success "Chaindata restore completed for $node_type node"
 }
 
 # Legacy function for backward compatibility - now calls restore_chaindata

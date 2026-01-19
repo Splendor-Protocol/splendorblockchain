@@ -180,6 +180,21 @@ func (bc *BlocklistChecker) CheckTransactionBlocklist(statedb vm.StateDB, from c
 	return nil
 }
 
+// CheckAddressBlocklistRPC checks if an address is blocklisted for RPC validation
+// This is used at the RPC level to reject transactions immediately
+func (bc *BlocklistChecker) CheckAddressBlocklistRPC(
+	statedb vm.StateDB,
+	address common.Address,
+	config *params.ChainConfig,
+	blockNumber *big.Int,
+) error {
+	if bc.IsBlocklisted(statedb, address, config, blockNumber) {
+		log.Warn("RPC transaction rejected: address is blocklisted", "address", address.Hex())
+		return ErrSenderBlocklisted
+	}
+	return nil
+}
+
 // SetBlocklistContractAddress allows updating the blocklist contract address
 // This should be called during initialization if a different address is used
 func SetBlocklistContractAddress(address common.Address) {

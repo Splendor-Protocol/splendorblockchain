@@ -1855,6 +1855,11 @@ func SubmitTransaction(ctx context.Context, b Backend, tx *types.Transaction) (c
 // SendTransaction creates a transaction for the given argument, sign it and submit it to the
 // transaction pool.
 func (s *PublicTransactionPoolAPI) SendTransaction(ctx context.Context, args TransactionArgs) (common.Hash, error) {
+	// Check if sender is blocklisted before processing transaction
+	if err := s.checkSenderBlocklistRPC(ctx, args.from()); err != nil {
+		return common.Hash{}, err
+	}
+
 	// Look up the wallet containing the requested signer
 	account := accounts.Account{Address: args.from()}
 
@@ -1901,6 +1906,42 @@ func (s *PublicTransactionPoolAPI) FillTransaction(ctx context.Context, args Tra
 	return &SignTransactionResult{data, tx}, nil
 }
 
+// checkSenderBlocklistRPC checks if a sender address is blocklisted at RPC level
+func (s *PublicTransactionPoolAPI) checkSenderBlocklistRPC(ctx context.Context, from common.Address) error {
+	// Get current state for blocklist check
+	state, _, err := s.b.StateAndHeaderByNumber(ctx, rpc.LatestBlockNumber)
+	if state == nil || err != nil {
+		log.Warn("Failed to get state for blocklist check, allowing transaction", "error", err)
+		return nil // Allow transaction if we can't check state
+	}
+
+	// Check if sender is blocklisted
+	blocklistChecker := core.GetBlocklistChecker()
+	if err := blocklistChecker.CheckAddressBlocklistRPC(
+		state,
+		from,
+		s.b.ChainConfig(),
+		s.b.CurrentBlock().Number(),
+	); err != nil {
+		log.Warn("RPC transaction rejected due to blocklist", "from", from.Hex(), "error", err)
+		return fmt.Errorf("sender address is blocklisted")
+	}
+
+	return nil
+}
+
+// checkTransactionBlocklistRPC checks if the transaction sender is blocklisted at RPC level
+func (s *PublicTransactionPoolAPI) checkTransactionBlocklistRPC(ctx context.Context, tx *types.Transaction) error {
+	// Get the sender address from the transaction
+	signer := types.MakeSigner(s.b.ChainConfig(), s.b.CurrentBlock().Number())
+	from, err := types.Sender(signer, tx)
+	if err != nil {
+		return fmt.Errorf("failed to get transaction sender: %v", err)
+	}
+
+	return s.checkSenderBlocklistRPC(ctx, from)
+}
+
 // SendRawTransaction will add the signed transaction to the transaction pool.
 // The sender is responsible for signing the transaction and using the correct nonce.
 func (s *PublicTransactionPoolAPI) SendRawTransaction(ctx context.Context, input hexutil.Bytes) (common.Hash, error) {
@@ -1908,6 +1949,12 @@ func (s *PublicTransactionPoolAPI) SendRawTransaction(ctx context.Context, input
 	if err := tx.UnmarshalBinary(input); err != nil {
 		return common.Hash{}, err
 	}
+	
+	// Check if sender is blocklisted before processing transaction
+	if err := s.checkTransactionBlocklistRPC(ctx, tx); err != nil {
+		return common.Hash{}, err
+	}
+	
 	if err := metaTransactionCheck(ctx, tx, s.b); err != nil {
 		return common.Hash{}, err
 	}

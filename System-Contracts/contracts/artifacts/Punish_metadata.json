@@ -7,6 +7,51 @@
 		"abi": [
 			{
 				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "admin",
+						"type": "address"
+					}
+				],
+				"name": "AdminAdded",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "admin",
+						"type": "address"
+					}
+				],
+				"name": "AdminRemoved",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "previousAdmin",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "newAdmin",
+						"type": "address"
+					}
+				],
+				"name": "AdminTransferred",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
 				"inputs": [],
 				"name": "LogDecreaseMissedBlocksCounter",
 				"type": "event"
@@ -187,6 +232,64 @@
 				"type": "function"
 			},
 			{
+				"inputs": [],
+				"name": "WalletBlocklistAddr",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_admin",
+						"type": "address"
+					}
+				],
+				"name": "addAdmin",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "admin",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"name": "admins",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "address",
@@ -310,6 +413,25 @@
 				"type": "function"
 			},
 			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_address",
+						"type": "address"
+					}
+				],
+				"name": "isAdmin",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
 				"inputs": [],
 				"name": "minimumValidatorStaking",
 				"outputs": [
@@ -368,6 +490,19 @@
 				"type": "function"
 			},
 			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_admin",
+						"type": "address"
+					}
+				],
+				"name": "removeAdmin",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
 				"inputs": [],
 				"name": "removeThreshold",
 				"outputs": [
@@ -391,6 +526,19 @@
 					}
 				],
 				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_admin",
+						"type": "address"
+					}
+				],
+				"name": "setAdmin",
+				"outputs": [],
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -461,11 +609,11 @@
 	},
 	"sources": {
 		"Params.sol": {
-			"keccak256": "0x059768f73637af9c9ec69c5c4a229b1511cecb8b3423b555510c93399fca4bd9",
+			"keccak256": "0x0589f453761213c562f19d97f0611ea9941e635bb49ef206c23ad8a38ee5d754",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://4e0e70c92a89477b233af4dbf2926b7d902899af5b80cd87fd13fa7270283904",
-				"dweb:/ipfs/QmU8pQBNqSv24YWFogAb62vas7meLaifhv5atg2P9hftZ3"
+				"bzz-raw://2ed26da28ae32a313b3a2b35755295b9e4961de650a70d2674f21cb49472c974",
+				"dweb:/ipfs/QmajPfnkJ4LmRXkGQM5Y7T2bJhACmmD9tVc1ThfUVRE9yp"
 			]
 		},
 		"Punish.sol": {
